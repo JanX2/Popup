@@ -20,32 +20,17 @@
     
     if (self != nil) {
         _statusItem = statusItem;
-        _statusItem.view = self;
+        _statusItem.target = self;
+        _statusItem.action = @selector(itemClicked:);
     }
+    
     return self;
 }
 
-
 #pragma mark -
+#pragma mark Events
 
-- (void)drawRect:(NSRect)dirtyRect
-{
-	[self.statusItem drawStatusBarBackgroundInRect:dirtyRect withHighlight:self.isHighlighted];
-    
-    NSImage *icon = self.isHighlighted ? self.alternateImage : self.image;
-    NSSize iconSize = [icon size];
-    NSRect bounds = self.bounds;
-    CGFloat iconX = roundf((NSWidth(bounds) - iconSize.width) / 2);
-    CGFloat iconY = roundf((NSHeight(bounds) - iconSize.height) / 2);
-    NSPoint iconPoint = NSMakePoint(iconX, iconY);
-
-	[icon drawAtPoint:iconPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
-}
-
-#pragma mark -
-#pragma mark Mouse tracking
-
-- (void)mouseDown:(NSEvent *)theEvent
+- (IBAction)itemClicked:(id)sender;
 {
     [NSApp sendAction:self.action to:self.target from:self];
 }
@@ -57,7 +42,6 @@
 {
     if (_isHighlighted == newFlag) return;
     _isHighlighted = newFlag;
-    [self setNeedsDisplay:YES];
 }
 
 #pragma mark -
@@ -66,7 +50,8 @@
 {
     if (_image != newImage) {
         _image = newImage;
-        [self setNeedsDisplay:YES];
+        [_statusItem setImage:_image];
+        [_statusItem setHighlightMode:YES];
     }
 }
 
@@ -84,8 +69,9 @@
 
 - (NSRect)globalRect
 {
-    NSRect frame = [self frame];
-    frame.origin = [self.window convertBaseToScreen:frame.origin];
+    //NSRect frame = [_statusItem.view frame];
+    //frame.origin = [self.window convertBaseToScreen:frame.origin];
+    NSRect frame = [[_statusItem valueForKey:@"window"] frame];
     return frame;
 }
 

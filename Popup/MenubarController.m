@@ -13,10 +13,10 @@
     if (self != nil)
     {
         // Install status item into the menu bar
-        NSStatusItem *statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:STATUS_ITEM_VIEW_WIDTH];
+        NSStatusItem *statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
         _statusItemView = [[StatusItemView alloc] initWithStatusItem:statusItem];
-        _statusItemView.image = [NSImage imageNamed:@"Status"];
-        _statusItemView.alternateImage = [NSImage imageNamed:@"StatusHighlighted"];
+        _statusItemView.image = [NSImage imageNamed:@"StatusTemplate"];
+        _statusItemView.target = nil; // Automatic target discovery.
         _statusItemView.action = @selector(togglePanel:);
     }
     return self;
